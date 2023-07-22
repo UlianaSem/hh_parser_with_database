@@ -91,13 +91,13 @@ class HeadHunterAPI(API):
         """
         name = employer['name']
         hh_id = employer['id']
-        region = employer['region']
+        region = employer['area']['name']
         hh_url = employer['alternate_url']
         company_url = employer['site_url']
 
-        return {'profession': name,
-                'salary_from': hh_id,
-                'salary_to': region,
+        return {'name': name,
+                'hh_id': hh_id,
+                'region': region,
                 'company_url': company_url,
                 'hh_url': hh_url}
 
@@ -176,17 +176,18 @@ class HeadHunterDataValidator(DataValidator):
             return address['raw']
 
         city, street, building = address['city'], address['street'], address['building']
+        address_list = []
 
-        if address['city'] is None:
-            city = ''
+        if address['city'] is not None:
+            address_list.append(city)
 
-        if address['street'] is None:
-            street = ''
+        if address['street'] is not None:
+            address_list.append(street)
 
-        if address['building'] is None:
-            building = ''
+        if address['building'] is not None:
+            address_list.append(building)
 
-        return f'{city}, {street}, {building}'
+        return ', '.join(address_list)
 
     @staticmethod
     def validate_vacancy_requirement(vacancy_requirement):
@@ -200,11 +201,12 @@ class HeadHunterDataValidator(DataValidator):
 
         requirement = vacancy_requirement['requirement']
         responsibility = vacancy_requirement['responsibility']
+        requirements_list = []
 
-        if requirement is None:
-            requirement = ''
+        if requirement is not None:
+            requirements_list.append(requirement)
 
-        if responsibility is None:
-            responsibility = ''
+        if responsibility is not None:
+            requirements_list.append(responsibility)
 
-        return f'{requirement} {responsibility}'
+        return '\n'.join(requirements_list)
