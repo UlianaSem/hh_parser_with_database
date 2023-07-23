@@ -73,13 +73,14 @@ class HeadHunterAPI(API):
             requirement = validator.validate_vacancy_requirement(vacancy['snippet'])
             url = vacancy['alternate_url']
 
-            vacancies_for_return.append({'profession': profession,
+            vacancies_for_return.append({'vacancy_name': profession,
                                          'salary_from': salary_from,
                                          'salary_to': salary_to,
                                          'currency': currency,
-                                         'url': url,
-                                         'requirements': requirement,
-                                         'address': address})
+                                         'vacancy_url': url,
+                                         'address': address,
+                                         'requirements': requirement
+                                         })
 
         return vacancies_for_return
 
@@ -95,10 +96,10 @@ class HeadHunterAPI(API):
         hh_url = employer['alternate_url']
         company_url = employer['site_url']
 
-        return {'name': name,
-                'hh_id': hh_id,
+        return {'employer_name': name,
+                'employer_url': company_url,
                 'region': region,
-                'company_url': company_url,
+                'hh_id': hh_id,
                 'hh_url': hh_url}
 
 
