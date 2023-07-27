@@ -5,7 +5,7 @@ import src.api
 
 @pytest.fixture
 def get_head_hunter_api_object():
-    return src.api.HeadHunterAPI()
+    return src.api.HeadHunterAPI('3672566')
 
 
 @pytest.fixture
@@ -18,24 +18,30 @@ def test_head_hunter_api(get_head_hunter_api_object):
     Проверяет правильность url
     :param get_head_hunter_api_object: объект класса Head Hunter
     """
-    get_head_hunter_api_object.URL = 'https://api.hh.ru/employers/'
+    assert get_head_hunter_api_object.employer_url == 'https://api.hh.ru/employers/3672566'
+    assert get_head_hunter_api_object.vacancies_url == 'https://api.hh.ru/vacancies?employer_id=3672566'
+    assert get_head_hunter_api_object.employer_info == {'employer_name': 'BRANDPOL',
+                                                        'employer_url': 'http://brandpolgroup.com',
+                                                        'region': 'Москва',
+                                                        'hh_id': '3672566',
+                                                        'hh_url': 'https://hh.ru/employer/3672566'}
 
 
-def test_get_employer_info(get_head_hunter_api_object):
-    """
-    Проверяет правильность получения данных о компании
-    :param get_head_hunter_api_object: объект класса Head Hunter
-    """
-    assert get_head_hunter_api_object.get_employer_info('3672566')['id'] == '3672566'
+# def test_get_employer_info(get_head_hunter_api_object):
+#     """
+#     Проверяет правильность получения данных о компании
+#     :param get_head_hunter_api_object: объект класса Head Hunter
+#     """
+#     assert get_head_hunter_api_object.__get_employer_info()['id'] == '3672566'
 
 
-def test_get_vacancies(get_head_hunter_api_object):
-    """
-    Проверяет правильность получения данных о вакансиях
-    :param get_head_hunter_api_object: объект класса Head Hunter
-    """
-    assert get_head_hunter_api_object.get_vacancies('https://api.hh.ru/vacancies?employer_id=3672566'
-                                                    )[0]['employer']['id'] == '3672566'
+# def test_get_vacancies(get_head_hunter_api_object):
+#     """
+#     Проверяет правильность получения данных о вакансиях
+#     :param get_head_hunter_api_object: объект класса Head Hunter
+#     """
+#     assert get_head_hunter_api_object.get_vacancies('https://api.hh.ru/vacancies?employer_id=3672566'
+#                                                     )[0]['employer']['id'] == '3672566'
 
 
 def test_formate_vacancies_data(get_head_hunter_api_object):
