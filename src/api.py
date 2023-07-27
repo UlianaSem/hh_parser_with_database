@@ -3,58 +3,52 @@ from abc import ABC, abstractmethod
 import requests
 
 
-class API(ABC):
-    """
-    Абстрактный класс для работы с API сайтов
-    """
-
-    @abstractmethod
-    def get_employer_info(self, employer_id):
-        """
-        Абстрактный метод для получения словаря с данными о работодателе
-        :param employer_id: идентификатор работодателя
-        """
-        pass
-
-    @abstractmethod
-    def get_vacancies(self, vacancies_url):
-        """
-        Абстрактный метод для получения словаря с данными о вакансиях
-        :param vacancies_url: словарь с данными о вакансиях
-        """
-        pass
-
-
-class HeadHunterAPI(API):
+class HeadHunterAPI:
     """
     Класс для работы с API сайта HeadHunter
     """
 
-    URL = 'https://api.hh.ru/employers/'
+    def __init__(self, employer_id: str):
+        """
+        Инициализирует экземпляр класса HeadHunter
+        :param employer_id: идентификатор работодателя
+        """
+        self.employer_url = 'https://api.hh.ru/employers/' + employer_id.strip()
 
-    def get_employer_info(self, employer_id: str):
+        employer_row_data = self.__get_employer_info()
+
+        self.vacancies_url = employer_row_data['vacancies_url']
+        self.__employer_info = self.formate_employer_data(employer_row_data)
+
+        vacancies_row_data = self.__get_vacancies()
+
+        self.__vacancies_data = self.formate_vacancies_data(vacancies_row_data)
+
+    def __get_employer_info(self):
         """
         Получает и возвращает словарь с данными о вакансиях
-        :param employer_id: идентификатор работодателя
         :return: словарь с данными о вакансиях
         """
-        employer_id = employer_id.strip()
-
-        employer_data = requests.get(self.URL + employer_id).json()
+        employer_data = requests.get(self.employer_url).json()
 
         return employer_data
 
-    def get_vacancies(self, vacancies_url: str):
+    def __get_vacancies(self):
         """
         Получает и возвращает словарь с данными о вакансиях
-        :param vacancies_url: ссылка на вакансии
         :return: словарь с данными о вакансиях
         """
-        vacancies_url = vacancies_url.strip()
-
-        vacancies_data = requests.get(vacancies_url).json()
+        vacancies_data = requests.get(self.vacancies_url).json()
 
         return vacancies_data['items']
+
+    @property
+    def employer_info(self):
+        return self.__employer_info
+
+    @property
+    def vacancies_data(self):
+        return self.__vacancies_data
 
     @staticmethod
     def formate_vacancies_data(vacancies: list):
