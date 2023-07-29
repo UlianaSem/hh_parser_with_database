@@ -75,3 +75,19 @@ def get_currency_id(params, currency: str):
             currency_id = cursor.fetchone()[0]
 
     return currency_id
+
+
+def build_answer(data):
+    """
+    Строит ответ для пользователя
+    :param data: запрашиваемые данные
+    """
+    if isinstance(data, int):
+        print('Средняя зарплата по вакансиям:', data)
+
+    else:
+        for line in data:
+            for key, value in line.items():
+                print(f"{key}: {value}", end=' | ')
+
+            print('')
