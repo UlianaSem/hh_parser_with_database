@@ -141,7 +141,7 @@ class HeadHunterDataValidator(DataValidator):
         :return: данные о зарплате
         """
         if salary is None:
-            return None, None
+            return None, None, None
 
         salary_from = salary['from']
         salary_to = salary['to']
